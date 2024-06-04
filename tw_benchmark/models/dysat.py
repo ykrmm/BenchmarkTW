@@ -44,6 +44,7 @@ class DySat(nn.Module):
         self.num_nodes = num_nodes
         self.num_features = num_features
         self.num_classes = num_classes
+        self.window = window
         self.structural_head_config = structural_head_config
         self.structural_layer_config = structural_layer_config
         self.temporal_head_config = temporal_head_config
@@ -154,7 +155,11 @@ class DySat(nn.Module):
 
         node_1, node_2, node_2_negative, _, _, _, time  = feed_dict.values()
         # run gnn
-        final_emb = self.forward(graphs) # [N, T, F]
+        if self.window > 0:
+            tw = max(0,len(graphs)-self.window)
+        else:
+            tw = 0   
+        final_emb = self.forward(graphs[tw:]) # [N, T, F]
         emb_source = final_emb[node_1,time,:]
         emb_pos  = final_emb[node_2,time,:]
         emb_neg = final_emb[node_2_negative,time,:]
@@ -192,7 +197,11 @@ class DySat(nn.Module):
         node, y, time  = feed_dict.values()
         y = y.view(-1, 1)
         # run gnn
-        final_emb = self.forward(graphs) # [N, T, F]
+        if self.window > 0:
+            tw = max(0,len(graphs)-self.window)
+        else:
+            tw = 0 
+        final_emb = self.forward(graphs[tw:]) # [N, T, F]
         emb_node = final_emb[node,time-1,:]
         pred = self.pred_reg(emb_node)
         

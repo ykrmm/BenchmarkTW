@@ -40,6 +40,7 @@ class DyGrEncoder(torch.nn.Module):
         self.conv_aggr = conv_aggr
         self.lstm_out_channels = in_channels
         self.lstm_num_layers = lstm_num_layers
+        self.window = time_length
         self.one_hot = one_hot
         self.undirected = undirected
         self.bceloss = BCEWithLogitsLoss()
@@ -123,7 +124,11 @@ class DyGrEncoder(torch.nn.Module):
 
         node_1, node_2, node_2_negative, _, _, _, time  = feed_dict.values()
         # run gnn
-        self.final_emb = self.forward(graphs) # [N, T, F]
+        if self.window > 0:
+            tw = max(0,len(graphs)-self.window)
+        else:
+            tw = 0   
+        self.final_emb = self.forward(graphs[tw:])
         #import ipdb; ipdb.set_trace()
         emb_source = self.final_emb[node_1,time,:]
         emb_pos  = self.final_emb[node_2,time,:]
@@ -139,7 +144,11 @@ class DyGrEncoder(torch.nn.Module):
         with torch.no_grad():
             node_1, node_2, node_2_negative, _, _, _, time  = feed_dict.values()
             # run gnn
-            final_emb = self.forward(graphs) # [N, T, F]
+            if self.window > 0:
+                tw = max(0,len(graphs)-self.window)
+            else:
+                tw = 0   
+            final_emb = self.forward(graphs[tw:])
             # for the eval we get the last embedding
             emb_source = final_emb[node_1, time-1 ,:]
             emb_pos  = final_emb[node_2, time-1 ,:]

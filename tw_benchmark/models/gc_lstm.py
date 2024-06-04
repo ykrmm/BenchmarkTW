@@ -56,6 +56,7 @@ class GCLSTM(torch.nn.Module):
         self.num_features = num_features
         self.in_channels = in_channels
         self.out_channels = in_channels
+        self.window = time_length
         self.K = K
         self.normalization = normalization
         self.bias = bias
@@ -245,7 +246,11 @@ class GCLSTM(torch.nn.Module):
 
         node_1, node_2, node_2_negative, _, _, _, time  = feed_dict.values()
         # run gnn
-        self.final_emb = self.forward(graphs) # [N, T, F]
+        if self.window > 0:
+            tw = max(0,len(graphs)-self.window)
+        else:
+            tw = 0   
+        self.final_emb = self.forward(graphs[tw:])
         emb_source = self.final_emb[node_1,time,:]
         emb_pos  = self.final_emb[node_2,time,:]
         emb_neg = self.final_emb[node_2_negative,time,:]
@@ -260,7 +265,11 @@ class GCLSTM(torch.nn.Module):
         node, y, time  = feed_dict.values()
         y = y.view(-1, 1)
         # run gnn
-        final_emb = self.forward(graphs) # [N, T, F]
+        if self.window > 0:
+            tw = max(0,len(graphs)-self.window)
+        else:
+            tw = 0   
+        final_emb = self.forward(graphs[tw:]) # [N, T, F]
         emb_node = final_emb[node,time,:]
         pred = self.pred_reg(emb_node)
         graphloss = self.mseloss(pred, y)
@@ -270,8 +279,11 @@ class GCLSTM(torch.nn.Module):
         with torch.no_grad():
             node_1, node_2, node_2_negative, _, _, _, time  = feed_dict.values()
             # run gnn
-            final_emb = self.forward(graphs) # [N, T, F]
-            # time-1 because we want to predict the next time step in eval
+            if self.window > 0:
+                tw = max(0,len(graphs)-self.window)
+            else:
+                tw = 0   
+            final_emb = self.forward(graphs[tw:]) # [N, T, F]
             emb_source = final_emb[node_1, time-1 ,:]
             emb_pos  = final_emb[node_2, time-1 ,:]
             emb_neg = final_emb[node_2_negative, time-1 ,:]

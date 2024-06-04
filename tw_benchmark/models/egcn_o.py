@@ -59,6 +59,7 @@ class EvolveGCNO(torch.nn.Module):
         self.in_channels = in_channels
         self.num_layers_rnn = num_layers_rnn
         self.rnn_type = rnn_type.upper()
+        self.window = time_length
         self.improved = improved
         self.cached = cached
         self.normalize = normalize
@@ -142,8 +143,11 @@ class EvolveGCNO(torch.nn.Module):
     def get_loss_link_pred(self, feed_dict,graphs):
 
         node_1, node_2, node_2_negative, _, _, _, time  = feed_dict.values()
-        # run gnn
-        final_emb = self.forward(graphs) # [N, T, F]
+        if self.window > 0:
+            tw = max(0,len(graphs)-self.window)
+        else:
+            tw = 0 
+        final_emb = self.forward(graphs[tw:]) # [N, T, F]
         emb_source = final_emb[node_1,time,:]
         emb_pos  = final_emb[node_2,time,:]
         emb_neg = final_emb[node_2_negative,time,:]
@@ -157,8 +161,11 @@ class EvolveGCNO(torch.nn.Module):
     def score_eval(self,feed_dict,graphs):
         with torch.no_grad():
             node_1, node_2, node_2_negative, _, _, _, time  = feed_dict.values()
-            # run gnn
-            final_emb = self.forward(graphs) # [N, T, F]
+            if self.window > 0:
+                tw = max(0,len(graphs)-self.window)
+            else:
+                tw = 0 
+            final_emb = self.forward(graphs[tw:]) # [N, T, F]
             # time-1 because we want to predict the next time step in eval
             emb_source = final_emb[node_1, time-1 ,:]
             emb_pos  = final_emb[node_2, time-1 ,:]

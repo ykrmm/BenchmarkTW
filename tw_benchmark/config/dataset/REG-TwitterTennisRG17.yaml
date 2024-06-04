@@ -1,0 +1,15 @@
+name: TwitterTennisRG17
+datadir: '/share/DEEPLEARNING/datasets/graph_datasets/Towards_better/TG_network_datasets'
+num_nodes: 1000
+num_edges: 40839
+timestamp: 120
+features_dim: 16
+num_classes: 2
+
+dts: 
+  node_reg:
+    _target_: dgt.datasets.RegData
+    dataname: 'TwitterTennis'
+    eventname: 'rg17'
+    n_nodes: ${dataset.num_nodes}
+    split_ratio: [0.7,0.15,0.15]

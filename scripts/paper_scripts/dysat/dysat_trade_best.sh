@@ -1,0 +1,46 @@
+python dgt/run.py\
+  gpu=2 \
+  model=DySat \
+  wandb_conf.name=DySat_Best_rnd_Trade \
+  dataset=DGB-UNtrade \
+  lr=0.001 \
+  model.evolving=False \
+  model.pred_next=False \
+  model.one_hot=True \
+  model.clip_grad=True \
+  model.link_pred.structural_head_config=[16,8,8] \
+  model.link_pred.structural_layer_config=[128] \
+  model.link_pred.temporal_head_config=[16] \
+  model.link_pred.temporal_layer_config=[128] \
+  model.link_pred.spatial_drop=0.1 \
+  model.link_pred.temporal_drop=0.5 \
+  model.link_pred.neg_weight=1.0 \
+  model.link_pred.undirected=True \
+  model.link_pred.residual=True \
+  optim.optimizer.weight_decay=0.0001 \
+  task.engine.n_runs=5 \
+  task.engine.batch_size=1024 \
+
+python dgt/run.py\
+  gpu=2 \
+  model=DySat \
+  wandb_conf.name=DySat_Best_hist_Trade \
+  dataset=DGB-UNtrade \
+  lr=0.001 \
+  model.evolving=False \
+  model.pred_next=False \
+  model.one_hot=True \
+  model.clip_grad=True \
+  model.link_pred.structural_head_config=[16,8,8] \
+  model.link_pred.structural_layer_config=[128] \
+  model.link_pred.temporal_head_config=[16] \
+  model.link_pred.temporal_layer_config=[128] \
+  model.link_pred.spatial_drop=0.1 \
+  model.link_pred.temporal_drop=0.5 \
+  model.link_pred.neg_weight=1.0 \
+  model.link_pred.undirected=True \
+  model.link_pred.residual=True \
+  optim.optimizer.weight_decay=0.0001 \
+  task.engine.n_runs=5 \
+  task.engine.batch_size=1024 \
+  task.sampling=historical \

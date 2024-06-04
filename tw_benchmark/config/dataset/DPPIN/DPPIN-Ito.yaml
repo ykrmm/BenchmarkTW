@@ -1,0 +1,45 @@
+
+name: DPPIN-Ito
+datadir: /users/k/karmimy/These/DynamicGraphTransformer/DPPIN
+num_nodes: 2856
+num_edges: 8638
+timestamp: 36
+features_dim: ${dataset.timestamp}
+
+num_classes: 2 # 2 nodes classes for DPPIN-Ito
+dts: 
+  node_classif: 
+    train:
+      _target_: dgt.datasets.ClassifData
+      datadir: ${dataset.datadir}
+      dataname: ${dataset.name}
+      mode: train
+      evolving: ${model.evolving}
+      n_nodes: ${dataset.num_nodes}
+      one_hot: ${model.one_hot}
+
+
+    test: 
+      _target_: dgt.datasets.ClassifData
+      datadir: ${dataset.datadir}
+      dataname: ${dataset.name}
+      mode: test
+      evolving: ${model.evolving}
+      n_nodes: ${dataset.num_nodes}
+      one_hot: ${model.one_hot}
+  
+  link_pred:
+    _target_: dgt.datasets.LinkPredData
+    datadir: ${dataset.datadir}
+    dataname: ${dataset.name}
+    evolving: ${model.evolving}
+    n_nodes: ${dataset.num_nodes}
+    one_hot: ${model.one_hot}
+    sampling: ${task.sampling}
+    train_ratio : ${task.train_ratio}
+    split: ${task.split}
+    pred_next : ${model.pred_next}
+
+
+  
+

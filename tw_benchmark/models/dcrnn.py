@@ -131,14 +131,25 @@ class DCRNN(torch.nn.Module):
 
     """
 
-    def __init__(self, in_channels: int, out_channels: int, K: int, bias: bool = True, window: int = 0):
+    def __init__(self,
+                 num_nodes: int,
+                 num_features: int,
+                 in_channels: int,
+                 out_channels: int,
+                 K: int,
+                 bias: bool = True,
+                 window: int = 0,
+                 one_hot: bool = True,):
+        
         super(DCRNN, self).__init__()
-
+        self.num_nodes = num_nodes 
+        self.num_features = num_features
         self.in_channels = in_channels
         self.out_channels = out_channels
+        self.window = window
         self.K = K
         self.bias = bias
-        self.window = window
+        self.one_hot = one_hot
         self._create_parameters_and_layers()
 
     def set_device(self,device):

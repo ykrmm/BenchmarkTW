@@ -1,4 +1,3 @@
-from tw_benchmark.models.lstm_gt import LSTMGT
 from tw_benchmark.models.dysat import DySat
 from tw_benchmark.models.random_model import RandomModel
 from tw_benchmark.models.static_models import StaticGNN
@@ -14,9 +13,6 @@ from tw_benchmark.models.vgrnn import VGRNN
 from tw_benchmark.models.htgn import HTGN
 from tw_benchmark.models.dcrnn import DCRNN
 __all__ = [
-    'FAST',
-    'LSTMGT',
-    'DGT_STA'
     'DySat',
     'RandomModel', 
     'StaticGNN',
@@ -30,5 +26,5 @@ __all__ = [
     'RegressionModel',
     'VGRNN',
     'HTGN',
-    'DCRNN'
+    'DCRNN',
 ]

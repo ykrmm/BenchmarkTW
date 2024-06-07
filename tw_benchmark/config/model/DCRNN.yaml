@@ -6,7 +6,7 @@ pred_next: False
 clip_grad: False
 
 link_pred:
-  _target_: dgt.models.DCRNN
+  _target_: tw_benchmark.models.DCRNN
   num_nodes: ${dataset.num_nodes}
   num_features: ${dataset.features_dim}
   in_channels: 128

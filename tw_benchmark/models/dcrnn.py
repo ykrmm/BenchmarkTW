@@ -2,7 +2,7 @@ import math
 import torch
 from torch_geometric.utils import to_dense_adj, dense_to_sparse
 from torch_geometric.nn.conv import MessagePassing
-
+from torch.nn import BCEWithLogitsLoss
 
 
 class DConv(MessagePassing):
@@ -135,21 +135,23 @@ class DCRNN(torch.nn.Module):
                  num_nodes: int,
                  num_features: int,
                  in_channels: int,
-                 out_channels: int,
                  K: int,
                  bias: bool = True,
                  window: int = 0,
-                 one_hot: bool = True,):
+                 one_hot: bool = True,
+                 undirected: bool = False):
         
         super(DCRNN, self).__init__()
         self.num_nodes = num_nodes 
         self.num_features = num_features
         self.in_channels = in_channels
-        self.out_channels = out_channels
+        self.out_channels = in_channels
         self.window = window
         self.K = K
         self.bias = bias
         self.one_hot = one_hot
+        self.undirected = undirected
+        self.bceloss = BCEWithLogitsLoss()
         self._create_parameters_and_layers()
 
     def set_device(self,device):
@@ -183,6 +185,10 @@ class DCRNN(torch.nn.Module):
         self._create_update_gate_parameters_and_layers()
         self._create_reset_gate_parameters_and_layers()
         self._create_candidate_state_parameters_and_layers()
+        if self.one_hot:
+            self.proj = torch.nn.Linear(self.num_nodes,self.in_channels,bias=False)
+        else: 
+            self.proj = torch.nn.Linear(self.num_features,self.in_channels,bias=False)
 
     def _set_hidden_state(self, X, H):
         if H is None:
@@ -232,6 +238,7 @@ class DCRNN(torch.nn.Module):
         Return types:
             * **H** (PyTorch Float Tensor) - Hidden state matrix for all nodes.
         """
+        X = self.proj(X)
         H = self._set_hidden_state(X, H)
         Z = self._calculate_update_gate(X, edge_index, edge_weight, H)
         R = self._calculate_reset_gate(X, edge_index, edge_weight, H)

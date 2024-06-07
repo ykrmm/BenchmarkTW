@@ -149,7 +149,7 @@ class EngineLinkPred(EngineBase):
         self.logger.info("Model: {}".format(self.model.__class__.__name__))
         self.logger.info("Criterion: {}".format(self.criterion.__class__.__name__))
         self.logger.info("Dataset: {}".format(self.config.dataset.name))
-        self.logger.info("Number of nodes: {}".format(self.model.num_nodes))
+        self.logger.info("Number of nodes: {}".format(self.config.dataset.num_nodes))
         self.logger.info("Total number of snapshots: {}".format(self.config.dataset.timestamp))
         self.logger.info("Split protocol : {}".format(self.config.task.split))
         self.logger.info("Edge sampling in evaluation: {}".format(self.config.task.sampling))
@@ -236,7 +236,7 @@ class EngineLinkPred(EngineBase):
 
             # edgebank 
             if self.config.model.name == 'EdgeBank':
-                tw = t_test - t_val
+                tw = self.model.tw
                 self.model.construct_node_history(train_dts.get_dataset_t(t_train-1).get_graphs(),tw)
             
             # Training loop

@@ -2,7 +2,7 @@ python tw_benchmark/run.py \
  --multirun \
  dataset=DGB-USLegis \
  wandb_conf.name=GCLSTM_SearchTW_Legis \
- gpu=2 \
+ gpu=1 \
  lr=0.1 \
  model=GCLSTM \
  model.evolving=False \

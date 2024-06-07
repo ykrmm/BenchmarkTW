@@ -2,7 +2,7 @@ python tw_benchmark/run.py \
  --multirun \
  dataset=DGB-UNtrade \
  wandb_conf.name=GCLSTM_SearchTW_Trade \
- gpu=0 \
+ gpu=2 \
  lr=0.1 \
  model=GCLSTM \
  model.evolving=False \

@@ -1,6 +1,6 @@
 python tw_benchmark/run.py\
   --multirun \
-  gpu=1 \
+  gpu=0 \
   model=DySat \
   wandb_conf.name=DySat_SearchTW_CanParl \
   dataset=DGB-CanParl \

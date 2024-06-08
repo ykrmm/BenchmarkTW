@@ -251,14 +251,15 @@ class GCLSTM(torch.nn.Module):
         else:
             tw = 0   
         self.final_emb = self.forward(graphs[tw:])
-        emb_source = self.final_emb[node_1,time,:]
-        emb_pos  = self.final_emb[node_2,time,:]
-        emb_neg = self.final_emb[node_2_negative,time,:]
+        emb_source = self.final_emb[node_1,-1,:]
+        emb_pos  = self.final_emb[node_2,-1,:]
+        emb_neg = self.final_emb[node_2_negative,-1,:]
         pos_score = torch.sum(emb_source*emb_pos, dim=1)
         neg_score = torch.sum(emb_source*emb_neg, dim=1)
         pos_loss = self.bceloss(pos_score, torch.ones_like(pos_score))
         neg_loss = self.bceloss(neg_score, torch.zeros_like(neg_score))
         graphloss = pos_loss + neg_loss
+        #import ipdb ; ipdb.set_trace()
         return graphloss, pos_score.detach().sigmoid(), neg_score.detach().sigmoid()
     
     def get_loss_node_pred(self,feed_dict,graphs):
@@ -284,9 +285,9 @@ class GCLSTM(torch.nn.Module):
             else:
                 tw = 0   
             final_emb = self.forward(graphs[tw:]) # [N, T, F]
-            emb_source = final_emb[node_1, time-1 ,:]
-            emb_pos  = final_emb[node_2, time-1 ,:]
-            emb_neg = final_emb[node_2_negative, time-1 ,:]
+            emb_source = final_emb[node_1, -1 ,:]
+            emb_pos  = final_emb[node_2, -1 ,:]
+            emb_neg = final_emb[node_2_negative, -1 ,:]
             pos_score = torch.sum(emb_source*emb_pos, dim=1)
             neg_score = torch.sum(emb_source*emb_neg, dim=1)        
             return pos_score.sigmoid(),neg_score.sigmoid()

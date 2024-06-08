@@ -1,14 +1,13 @@
 python tw_benchmark/run.py \
- --multirun \
  dataset=DGB-CanParl \
  wandb_conf.name=GCLSTM_SearchTW_Can \
- gpu=1 \
+ gpu=0 \
  lr=0.1 \
  model=GCLSTM \
  model.evolving=False \
  model.pred_next=False \
  model.clip_grad=True \
- model.link_pred.time_length=1,2,3,4,5,6,7,8,9,10,-1 \
+ model.link_pred.time_length=3 \
  model.link_pred.K=3 \
  model.link_pred.normalization=rw \
  model.link_pred.bias=True \

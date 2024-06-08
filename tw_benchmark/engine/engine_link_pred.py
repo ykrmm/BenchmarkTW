@@ -82,6 +82,7 @@ class EngineLinkPred(EngineBase):
                 self.optimizer.zero_grad()
                 with torch.autocast(device_type=('cuda'), dtype=torch.float16, enabled=self.use_amp):
                     loss, pos_prob, neg_prob = self.model.get_loss_link_pred(feed_dict, graphs_t)  # [B,C] B: batch size, C: number of classes           
+                    
                     losses.append(loss.item())
 
                 self.scaler.scale(loss).backward()

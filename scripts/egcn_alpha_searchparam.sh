@@ -17,5 +17,5 @@ python tw_benchmark/run.py \
  model.link_pred.undirected=True \
  task.engine.n_runs=1 \
  task.engine.epoch=30 \
- task.engine.batch_size=2048 \
- optim.optimizer.weight_decay=5e-7 \
+ task.engine.batch_size=1024 \
+ optim.optimizer.weight_decay=0 \

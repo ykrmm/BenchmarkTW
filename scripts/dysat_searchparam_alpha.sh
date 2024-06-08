@@ -22,5 +22,5 @@ python tw_benchmark/run.py \
  model.link_pred.residual=False \
  optim.optimizer.weight_decay=0.0001 \
  task.engine.n_runs=1 \
- task.engine.epoch=50 \
+ task.engine.epoch=30 \
  

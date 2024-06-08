@@ -36,10 +36,10 @@ class DySat(nn.Module):
             time_length (int): Total timesteps in dataset.
         """
         super(DySat, self).__init__()
-        if window < 0:
-            self.num_time_steps = time_length  
-        else:
-            self.num_time_steps = min(time_length, window + 1)  # window = 0 => only self.
+        #if window < 0:
+        self.num_time_steps = time_length  
+        #else:
+        #    self.num_time_steps = min(time_length, window + 1)  # window = 0 => only self.
         
         self.num_nodes = num_nodes
         self.num_features = num_features

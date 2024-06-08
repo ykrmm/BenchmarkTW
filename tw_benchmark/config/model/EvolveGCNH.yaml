@@ -6,7 +6,7 @@ name: EvolveGCNH
 clip_grad: True
 
 link_pred:
-  _target_: dgt.models.EvolveGCNH
+  _target_: tw_benchmark.models.EvolveGCNH
   num_nodes: ${dataset.num_nodes}
   num_features: ${dataset.features_dim}
   in_channels: 128
@@ -22,7 +22,7 @@ link_pred:
   one_hot: ${model.one_hot}
   task_name: 'link_pred'
 node_reg:
-  _target_: dgt.models.EvolveGCNH
+  _target_: tw_benchmark.models.EvolveGCNH
   num_nodes: ${dataset.num_nodes}
   num_features: ${dataset.features_dim}
   in_channels: 128

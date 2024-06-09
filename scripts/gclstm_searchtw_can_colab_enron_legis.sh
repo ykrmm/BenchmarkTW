@@ -1,7 +1,7 @@
 python tw_benchmark/run.py \
  dataset=DGB-CanParl \
  wandb_conf.name=GCLSTM_SearchTW_Can \
- gpu=0 \
+ gpu=1 \
  lr=0.1 \
  model=GCLSTM \
  model.evolving=False \
@@ -21,7 +21,7 @@ python tw_benchmark/run.py \
  wandb_conf.name=GCLSTM_SearchTW_Colab \
  dataset=DGB-Colab \
  model=GCLSTM \
- gpu=2 \
+ gpu=1 \
  lr=0.001\
  task.engine.batch_size=128 \
  task.split=lastk \
@@ -42,7 +42,7 @@ python tw_benchmark/run.py \
  wandb_conf.name=GCLSTM_SearchTW_Enron \
  dataset=DGB-Enron \
  model=GCLSTM \
- gpu=2 \
+ gpu=1 \
  lr=0.0001 \
  task.engine.batch_size=128 \
  task.split=lastk \

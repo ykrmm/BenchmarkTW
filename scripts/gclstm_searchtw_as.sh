@@ -3,7 +3,7 @@ python tw_benchmark/run.py \
  wandb_conf.name=GCLSTM_SearchTW_AS733 \
  dataset=DGB-AS733 \
  model=GCLSTM \
- gpu=1 \
+ gpu=0 \
  lr=0.01 \
  task.engine.batch_size=1024 \
  task.split=lastk \

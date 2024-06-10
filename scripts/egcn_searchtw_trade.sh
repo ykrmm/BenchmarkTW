@@ -2,7 +2,7 @@ python tw_benchmark/run.py \
  --multirun \
  dataset=DGB-UNtrade \
  wandb_conf.name=EGCNH_SearchTW_Trade \
- gpu=2 \
+ gpu=0 \
  lr=0.01 \
  model=EvolveGCNH \
  model.evolving=False \

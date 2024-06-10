@@ -17,7 +17,7 @@ link_pred:
   normalize: True
   add_self_loops: True
   use_edge_weight: False
-  undirected: False 
+  undirected: True 
   neg_weight: 1.0
   one_hot: ${model.one_hot}
   task_name: 'link_pred'

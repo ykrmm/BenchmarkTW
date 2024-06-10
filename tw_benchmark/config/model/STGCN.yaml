@@ -1,0 +1,22 @@
+evolving: True # If false Model does not considere links that appeared in previous timestamp
+one_hot: True
+score: 'none'
+pred_next: False # If true, the model will predict the next timestamp links
+name: STGCN
+clip_grad: True
+
+link_pred:
+  _target_: tw_benchmark.models.STGCN
+  num_nodes: ${dataset.num_nodes}
+  num_features: ${dataset.features_dim}
+  in_channels: 128
+  hidden_channels: 128
+  out_channels: 128
+  window: 3
+  kernel_size: 1
+  K: 2
+  normalization: 'sym'
+  bias: True
+  one_hot: ${model.one_hot}
+  undirected: True
+

@@ -36,10 +36,10 @@ class DySat(nn.Module):
             time_length (int): Total timesteps in dataset.
         """
         super(DySat, self).__init__()
-        #if window < 0:
-        self.num_time_steps = time_length  
-        #else:
-        #    self.num_time_steps = min(time_length, window + 1)  # window = 0 => only self.
+        if window < 0:
+            self.num_time_steps = time_length  
+        else:
+            self.num_time_steps = window
         
         self.num_nodes = num_nodes
         self.num_features = num_features
@@ -184,8 +184,11 @@ class DySat(nn.Module):
     def score_eval(self,feed_dict,graphs):
         with torch.no_grad():
             node_1, node_2, node_2_negative, _, _, _, time  = feed_dict.values()
-            # run gnn
-            final_emb = self.forward(graphs) # [N, T, F]
+            if self.window > 0:
+                tw = max(0,len(graphs)-self.window)
+            else:
+                tw = 0   
+            final_emb = self.forward(graphs[tw:]) # [N, T, F]
             emb_source = final_emb[node_1, -1 ,:]
             emb_pos  = final_emb[node_2, -1 ,:]
             emb_neg = final_emb[node_2_negative, -1 ,:]

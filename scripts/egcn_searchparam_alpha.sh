@@ -9,7 +9,7 @@ python tw_benchmark/run.py \
  model.pred_next=False \
  model.clip_grad=False \
  model.link_pred.num_layers_rnn=1,2 \
- model.link_pred.time_length=3 \
+ model.link_pred.time_length=1 \
  model.link_pred.improved=True,False \
  model.link_pred.cached=False,True \
  model.link_pred.add_self_loops=False \

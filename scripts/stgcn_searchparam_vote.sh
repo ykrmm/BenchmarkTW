@@ -2,7 +2,7 @@ python tw_benchmark/run.py \
  --multirun \
  dataset=DGB-UNvote \
  wandb_conf.name=STGCN_SearchParam_Vote \
- gpu=0 \
+ gpu=2 \
  lr=0.1,0.01,0.001,0.0001 \
  model=STGCN \
  model.evolving=False \

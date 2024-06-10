@@ -2,7 +2,7 @@ python tw_benchmark/run.py \
  --multirun \
  dataset=DGB-Colab \
  wandb_conf.name=STGCN_SearchParam_Colab \
- gpu=0 \
+ gpu=1 \
  lr=0.1,0.01,0.001,0.0001 \
  model=STGCN \
  model.evolving=False \
@@ -10,7 +10,7 @@ python tw_benchmark/run.py \
  model.clip_grad=False \
  model.link_pred.window=3 \
  model.link_pred.kernel_size=1 \
- model.link_pred.K=2 \
+ model.link_pred.K=1,3 \
  model.link_pred.normalization=sym \
  model.link_pred.undirected=True \
  optim.optimizer.weight_decay=0 \

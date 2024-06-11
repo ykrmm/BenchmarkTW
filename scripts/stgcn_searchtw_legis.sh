@@ -2,7 +2,7 @@ python tw_benchmark/run.py \
  --multirun \
  dataset=DGB-USLegis \
  wandb_conf.name=STGCN_SearchTW_Legis \
- gpu=1 \
+ gpu=2 \
  lr=0.001 \
  model=STGCN \
  model.evolving=False \

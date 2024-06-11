@@ -1,15 +1,16 @@
 python tw_benchmark/run.py \
- wandb_conf.name=DySat_SearchParam_Alpha \
- dataset=DGB-Bitcoin-Alpha \
+ --multirun \
+ wandb_conf.name=DySat_SearchTW_OTC \
+ dataset=DGB-Bitcoin-OTC \
  model=DySat \
  gpu=0 \
- lr=0.00001 \
- task.engine.batch_size=512 \
+ lr=0.01 \
+ task.engine.batch_size=1024 \
  task.split=lastk \
  model.evolving=False \
  model.clip_grad=True \
  model.pred_next=False \
- model.link_pred.window=1 \
+ model.link_pred.window=1,2,3,4,5,6,7,8,9,10,-1 \
  model.link_pred.structural_head_config=[8,4,4] \
  model.link_pred.structural_layer_config=[128] \
  model.link_pred.temporal_head_config=[8] \
@@ -22,4 +23,3 @@ python tw_benchmark/run.py \
  optim.optimizer.weight_decay=0.0001 \
  task.engine.n_runs=1 \
  task.engine.epoch=50 \
- 

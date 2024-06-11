@@ -3,8 +3,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch_geometric.nn import ChebConv
-
-
+from torch.nn import BCEWithLogitsLoss
+from torch_geometric.utils import to_undirected
 
 class TemporalConv(nn.Module):
     r"""Temporal convolution block applied to nodes in the STGCN Layer
@@ -48,7 +48,7 @@ class TemporalConv(nn.Module):
 
 
 
-class STConv(nn.Module):
+class STGCN(nn.Module):
     r"""Spatio-temporal convolution block using ChebConv Graph Convolutions.
     For details see: `"Spatio-Temporal Graph Convolutional Networks:
     A Deep Learning Framework for Traffic Forecasting"
@@ -92,24 +92,36 @@ class STConv(nn.Module):
     def __init__(
         self,
         num_nodes: int,
+        num_features: int,
         in_channels: int,
         hidden_channels: int,
         out_channels: int,
+        window: int, 
         kernel_size: int,
         K: int,
         normalization: str = "sym",
         bias: bool = True,
+        one_hot: bool = True,
+        undirected: bool = True,
     ):
-        super(STConv, self).__init__()
+        super(STGCN, self).__init__()
         self.num_nodes = num_nodes
         self.in_channels = in_channels
         self.hidden_channels = hidden_channels
         self.out_channels = out_channels
+        self.window = window 
         self.kernel_size = kernel_size
         self.K = K
         self.normalization = normalization
         self.bias = bias
+        self.undirected = undirected
+        self.bceloss = BCEWithLogitsLoss()
 
+        if one_hot:
+            self.lin = nn.Linear(num_nodes, in_channels)
+        else:
+            self.lin = nn.Linear(num_features, in_channels)
+        
         self._temporal_conv1 = TemporalConv(
             in_channels=in_channels,
             out_channels=hidden_channels,
@@ -131,15 +143,11 @@ class STConv(nn.Module):
         )
 
         self._batch_norm = nn.BatchNorm2d(num_nodes)
-
-
-    def forward(
-        self,
-        X: torch.FloatTensor,
-        edge_index: torch.LongTensor,
-        edge_weight: torch.FloatTensor = None,
-    ) -> torch.FloatTensor:
-
+    
+    def set_device(self, device):
+        self.device = device
+            
+    def forward(self,graphs):
         r"""Forward pass. If edge weights are not present the forward pass
         defaults to an unweighted graph.
 
@@ -151,26 +159,58 @@ class STConv(nn.Module):
         Return types:
             * **T** (PyTorch FloatTensor) - Sequence of node features.
         """
-        T_0 = self._temporal_conv1(X)
+        x = self.lin(graphs[0].x.to(self.device))
+        x = x.unsqueeze(0)  # Taille: (1, N_nodes, in_channels)
+        x = x.repeat(len(graphs), 1, 1)  # Taille: (T, N_nodes, in_channels)
+        x = x.unsqueeze(0)  # Taille: (1, T, N_nodes, in_channels)
+        T_0 = self._temporal_conv1(x)     
         T = torch.zeros_like(T_0).to(T_0.device)
         for b in range(T_0.size(0)):
             for t in range(T_0.size(1)):
-                T[b][t] = self._graph_conv(T_0[b][t], edge_index, edge_weight)
-
+                edge_index =  to_undirected(graphs[t].edge_index.to(self.device)) if self.undirected else graphs[t].edge_index.to(self.device)
+                T[b][t] = self._graph_conv(T_0[b][t], edge_index)
         T = F.relu(T)
         T = self._temporal_conv2(T)
         T = T.permute(0, 2, 1, 3)
-        T = self._batch_norm(T)
-        T = T.permute(0, 2, 1, 3)
+        #T = self._batch_norm(T)
+        T = T.permute(0, 2, 1, 3) # B, T, N, F
+        T = T.squeeze(0) # T, N, F
+        # N, T, F
+        T = T.permute(1, 0, 2)
         return T
     
-    def forward(self,graphs):
-        output = []
-        H = None
-        for t in range(len(graphs)):
-            edge_index = graphs[t].edge_index.to(self.device) if self.undirected else graphs[t].edge_index.to(self.device)
-            edge_weight = torch.ones_like(edge_index[0], dtype=torch.float).to(self.device)
-            T = self.forward_snapshot(graphs[t].x.to(self.device), edge_index, edge_weight)
-            output.append(H)
-        final_emb = torch.stack(output, dim=1)
-        return final_emb
+    def get_loss_link_pred(self, feed_dict,graphs):
+
+        node_1, node_2, node_2_negative, _, _, _, time  = feed_dict.values()
+        # run gnn
+        if self.window > 0:
+            tw = max(0,len(graphs)-self.window)
+        else:
+            tw = 0 
+        final_emb = self.forward(graphs[tw:]) # [N, T, F]
+        emb_source = final_emb[node_1,-1,:]
+        emb_pos  = final_emb[node_2,-1,:]
+        emb_neg = final_emb[node_2_negative,-1,:]
+        pos_score = torch.sum(emb_source*emb_pos, dim=1)
+        neg_score = torch.sum(emb_source*emb_neg, dim=1)
+        pos_loss = self.bceloss(pos_score, torch.ones_like(pos_score))
+        neg_loss = self.bceloss(neg_score, torch.zeros_like(neg_score))
+        graphloss = pos_loss + neg_loss
+            
+        return graphloss, pos_score.detach().sigmoid(), neg_score.detach().sigmoid()
+    
+    def score_eval(self,feed_dict,graphs):
+        with torch.no_grad():
+            node_1, node_2, node_2_negative, _, _, _, time  = feed_dict.values()
+            if self.window > 0:
+                tw = max(0,len(graphs)-self.window)
+            else:
+                tw = 0 
+            final_emb = self.forward(graphs[tw:]) # [N, T, F]
+            # time-1 because we want to predict the next time step in eval
+            emb_source = final_emb[node_1, -1 ,:]
+            emb_pos  = final_emb[node_2, -1 ,:]
+            emb_neg = final_emb[node_2_negative, -1 ,:]
+            pos_score = torch.sum(emb_source*emb_pos, dim=1)
+            neg_score = torch.sum(emb_source*emb_neg, dim=1)        
+            return pos_score.sigmoid(),neg_score.sigmoid()

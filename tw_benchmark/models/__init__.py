@@ -12,6 +12,7 @@ from tw_benchmark.models.reg_mlp import RegressionModel
 from tw_benchmark.models.vgrnn import VGRNN
 from tw_benchmark.models.htgn import HTGN
 from tw_benchmark.models.dcrnn import DCRNN
+from tw_benchmark.models.stgcn import STGCN
 __all__ = [
     'DySat',
     'RandomModel', 
@@ -27,4 +28,5 @@ __all__ = [
     'VGRNN',
     'HTGN',
     'DCRNN',
+    'STGCN'
 ]

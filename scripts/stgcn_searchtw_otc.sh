@@ -1,17 +1,17 @@
 python tw_benchmark/run.py \
  --multirun \
- dataset=DGB-AS733 \
- wandb_conf.name=STGCN_SearchParam_AS \
- gpu=0 \
- lr=0.1,0.01,0.001,0.0001 \
+ dataset=DGB-Bitcoin-OTC \
+ wandb_conf.name=STGCN_SearchTW_OTC \
+ gpu=1 \
+ lr=0.00001 \
  model=STGCN \
  model.evolving=False \
  model.pred_next=False \
  model.clip_grad=False \
- model.link_pred.window=3 \
+ model.link_pred.window=1,2,3,4,5,6,7,8,9,10,-1 \
  model.link_pred.kernel_size=1 \
  model.link_pred.K=2 \
- model.link_pred.normalization=sym \
+ model.link_pred.normalization=sym,rw \
  model.link_pred.undirected=True \
  optim.optimizer.weight_decay=0 \
  task.engine.epoch=50 \

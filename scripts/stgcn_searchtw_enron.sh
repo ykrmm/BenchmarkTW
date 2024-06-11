@@ -1,14 +1,14 @@
 python tw_benchmark/run.py \
  --multirun \
  dataset=DGB-Enron \
- wandb_conf.name=STGCN_SearchParam_Enron \
- gpu=1 \
- lr=0.1,0.01,0.001,0.0001 \
+ wandb_conf.name=STGCN_SearchTW_Enron \
+ gpu=2 \
+ lr=0.001 \
  model=STGCN \
  model.evolving=False \
  model.pred_next=False \
  model.clip_grad=False \
- model.link_pred.window=3 \
+ model.link_pred.window=1,2,3,4,5,6,7,8,9,10,-1 \
  model.link_pred.kernel_size=1 \
  model.link_pred.K=2 \
  model.link_pred.normalization=sym \

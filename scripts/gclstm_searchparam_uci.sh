@@ -4,6 +4,7 @@ python tw_benchmark/run.py \
  wandb_conf.name=GCLSTM_SearchParam_Message \
  gpu=1 \
  lr=0.1,0.01,0.001,0.0001,0.00001 \
+ task.split=lastk \
  model=GCLSTM \
  model.evolving=False \
  model.pred_next=False \

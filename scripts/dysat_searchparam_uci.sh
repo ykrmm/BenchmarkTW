@@ -1,13 +1,12 @@
 python tw_benchmark/run.py \
- --multirun \
  wandb_conf.name=DySat_SearchParams_Message \
  dataset=DGB-UCI-Message \
  model=DySat \
  gpu=0 \
- lr=0.1,0.01,0.001,0.0001,0.00001\
+ lr=0.1,0.01,0.001,0.0001,0.00001 \
  task.engine.batch_size=1024 \
  task.split=lastk \
- model.evolving=True \
+ model.evolving=False \
  model.clip_grad=True \
  model.pred_next=False \
  model.link_pred.window=1 \

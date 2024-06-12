@@ -1,19 +1,19 @@
 python tw_benchmark/run.py \
  --multirun \
  dataset=DGB-UCI-Message \
- wandb_conf.name=EGCNH_SearchParam_Message \
+ wandb_conf.name=EGCNH_SearchTW_Message \
  gpu=1 \
- lr=0.1,0.01,0.001,0.0001,0.00001 \
+ lr=0.00001 \
  task.split=lastk \
  model=EvolveGCNH \
  model.evolving=False \
  model.pred_next=False \
  model.clip_grad=True \
  model.link_pred.num_layers_rnn=1 \
- model.link_pred.time_length=1 \
+ model.link_pred.time_length=1,2,3,4,5,6,7,8,9,10,-1 \
  model.link_pred.improved=True \
  model.link_pred.cached=False \
- model.link_pred.add_self_loops=False,True \
+ model.link_pred.add_self_loops=True \
  model.link_pred.use_edge_weight=False \
  model.link_pred.undirected=True \
  task.engine.n_runs=1 \

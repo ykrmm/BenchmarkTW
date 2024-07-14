@@ -25,7 +25,7 @@ node_classif:
   task_name: 'node_classif'
   
 link_pred:
-  _target_: dgt.models.DySat
+  _target_: tw_benchmark.models.DySat
   num_nodes: ${dataset.num_nodes}
   num_features: ${dataset.features_dim}
   num_classes: ${dataset.num_classes}

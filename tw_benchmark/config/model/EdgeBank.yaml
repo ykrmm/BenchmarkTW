@@ -3,8 +3,10 @@ one_hot: True
 name: EdgeBank
 pred_next: False
 clip_grad: False
+score: 'none'
 
 link_pred:
-  _target_: dgt.models.EdgeBank
-  mode: 'tw'
+  _target_: tw_benchmark.models.EdgeBank
+  window: 3
+  undirected: True 
   

@@ -5,11 +5,15 @@ class EdgeBank(torch.nn.Module):
     EdgeBank model for link prediction
     mode: 'tw' or 'infinity', if infinity then the model will consider all the history of a node
     """
-    def __init__(self, mode='tw'):
+    def __init__(self, window, undirected):
         super(EdgeBank, self).__init__()
         self.lin = torch.nn.Linear(1,1) # avoid error for optimizer
-        self.mode = mode
-        assert self.mode in ['tw','infinity'], 'mode must be tw or infinity'
+        self.tw = window
+        self.undirected = undirected
+        if self.tw > 0: 
+            self.mode = 'tw'
+        else:
+            self.mode = 'infinity'
         
     def construct_node_history(self,graph_train,tw):
         self.node_history = {}

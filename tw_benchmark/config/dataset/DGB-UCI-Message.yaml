@@ -2,7 +2,7 @@ name: UCI-Message
 datadir: '/share/DEEPLEARNING/datasets/graph_datasets/Towards_better/TG_network_datasets'
 num_nodes: 1899
 num_edges: 59835
-timestamp: 28
+timestamp: 88
 features_dim: ${dataset.num_nodes}
 num_classes: 2
 
@@ -18,4 +18,7 @@ dts:
     sampling: ${task.sampling}
     train_ratio : ${task.train_ratio}
     split: ${task.split}
+    k_val: 9
+    k_test: 17
     pred_next : ${model.pred_next}
+    

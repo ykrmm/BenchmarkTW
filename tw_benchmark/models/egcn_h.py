@@ -169,6 +169,7 @@ class EvolveGCNH(torch.nn.Module):
         self.neg_weight = neg_weight
         self.one_hot = one_hot
         self.num_layers_rnn = num_layers_rnn
+        self.window = time_length
         self.use_edge_weight = use_edge_weight if not undirected else False # if undirected, use_edge_weight is always False
         self.undirected = undirected
         self.task_name = task_name
@@ -262,10 +263,14 @@ class EvolveGCNH(torch.nn.Module):
 
         node_1, node_2, node_2_negative, _, _, _, time  = feed_dict.values()
         # run gnn
-        final_emb = self.forward(graphs) # [N, T, F]
-        emb_source = final_emb[node_1,time,:]
-        emb_pos  = final_emb[node_2,time,:]
-        emb_neg = final_emb[node_2_negative,time,:]
+        if self.window > 0:
+            tw = max(0,len(graphs)-self.window)
+        else:
+            tw = 0 
+        final_emb = self.forward(graphs[tw:]) # [N, T, F]
+        emb_source = final_emb[node_1,-1,:]
+        emb_pos  = final_emb[node_2,-1,:]
+        emb_neg = final_emb[node_2_negative,-1,:]
         pos_score = torch.sum(emb_source*emb_pos, dim=1)
         neg_score = torch.sum(emb_source*emb_neg, dim=1)
         pos_loss = self.bceloss(pos_score, torch.ones_like(pos_score))
@@ -277,12 +282,15 @@ class EvolveGCNH(torch.nn.Module):
     def score_eval(self,feed_dict,graphs):
         with torch.no_grad():
             node_1, node_2, node_2_negative, _, _, _, time  = feed_dict.values()
-            # run gnn
-            final_emb = self.forward(graphs) # [N, T, F]
+            if self.window > 0:
+                tw = max(0,len(graphs)-self.window)
+            else:
+                tw = 0 
+            final_emb = self.forward(graphs[tw:]) # [N, T, F]
             # time-1 because we want to predict the next time step in eval
-            emb_source = final_emb[node_1, time-1 ,:]
-            emb_pos  = final_emb[node_2, time-1 ,:]
-            emb_neg = final_emb[node_2_negative, time-1 ,:]
+            emb_source = final_emb[node_1, -1 ,:]
+            emb_pos  = final_emb[node_2, -1 ,:]
+            emb_neg = final_emb[node_2_negative, -1 ,:]
             pos_score = torch.sum(emb_source*emb_pos, dim=1)
             neg_score = torch.sum(emb_source*emb_neg, dim=1)        
             return pos_score.sigmoid(),neg_score.sigmoid()

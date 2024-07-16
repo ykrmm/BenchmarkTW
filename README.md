@@ -22,8 +22,8 @@ Exemple launch experiments of EGCN on UNtrade:
 # in config/wandb_conf/wandb_default.yaml put your wandb info
 
 wandb login
-wandb online
 mv scripts/paper_scripts/egcnh/egcn_searchtw_trade.sh scripts/egcn_searchtw_trade.sh
+sh scripts/egcn_searchtw_trade.sh
 ```
 ## Datasets 
 All datasets use in our experiments are in the 'datasets' folder. 

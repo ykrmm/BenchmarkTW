@@ -1,5 +1,5 @@
 
-entity: nueve
+entity: your_wandb_entity
 project_link_pred: BenchmarkTW
-name: ${model.name}_${task.sampling}_${dataset.name}
+name: ${model.name}_${dataset.name}
 

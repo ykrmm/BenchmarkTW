@@ -1,5 +1,5 @@
 # Temporal receptive field in dynamic graph learning: A comprehensive analysis
-`![TW](https://github.com/votre-utilisateur/nom-du-projet/blob/main/images/apercu.png)`.
+`![TW](https://github.com/ykrmm/BenchmarkTW/blob/main/tw.png)`.
 
 ## Installation 
 ```

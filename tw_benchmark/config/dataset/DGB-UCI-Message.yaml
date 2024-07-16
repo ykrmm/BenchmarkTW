@@ -1,5 +1,5 @@
 name: UCI-Message
-datadir: '/share/DEEPLEARNING/datasets/graph_datasets/Towards_better/TG_network_datasets'
+datadir: 'datasets'
 num_nodes: 1899
 num_edges: 59835
 timestamp: 88

@@ -1,5 +1,5 @@
 name: USLegis
-datadir: '/share/DEEPLEARNING/datasets/graph_datasets/Towards_better/TG_network_datasets'
+datadir: 'datasets'
 num_nodes: 225
 num_edges: 60396
 timestamp: 12

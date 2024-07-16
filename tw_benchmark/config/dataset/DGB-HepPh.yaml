@@ -1,5 +1,5 @@
 name: HepPh
-datadir: '/share/DEEPLEARNING/datasets/graph_datasets/Towards_better/TG_network_datasets'
+datadir: 'datasets'
 num_nodes: 15330
 num_edges: 1631581
 timestamp: 36

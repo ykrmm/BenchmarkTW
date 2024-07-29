@@ -10,9 +10,6 @@ pip install torch_geometric
 pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.2.0+cu121.html
 pip install torchmetrics
 pip install torch-geometric-temporal
-pip install wandb
-pip install hydra-core
-pip install hydra-colorlog
 pip install -e .
 ```
 
@@ -29,3 +26,15 @@ sh scripts/egcn_searchtw_trade.sh
 All datasets use in our experiments are in the 'datasets' folder. 
 
 ## Citation
+Cite as : 
+```
+@misc{karmim2024temporalreceptivefielddynamic,
+      title={Temporal receptive field in dynamic graph learning: A comprehensive analysis}, 
+      author={Yannis Karmim and Leshanshui Yang and Raphaël Fournier S'Niehotta and Clément Chatelain and Sébastien Adam and Nicolas Thome},
+      year={2024},
+      eprint={2407.12370},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2407.12370}, 
+}
+```
